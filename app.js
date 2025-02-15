@@ -8,6 +8,8 @@ const passport = require('passport');
 const { PrismaSessionStore } = require('@quixo3/prisma-session-store');
 const { PrismaClient } = require('@prisma/client');
 
+const routes = require('./routes');
+
 const app = express();
 
 app.use(
@@ -37,13 +39,28 @@ app.use(passport.session());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-
-app.get("/", (req, res) => {
-    res.json({
-      message: "Welcome to the API ",
-    });
+//you will have access to the currentUser variable in all of your views
+app.use((req, res, next) => {
+    res.locals.currentUser = req.user;
+    next();
   });
 
+
+
+app.use('/',routes.homepage);
+app.use('/session', routes.session);
+app.use('/users', routes.user);
+app.use('/posts', routes.post);
+app.use('/comments', routes.comment);
+
+app.use((req, res) => {
+    res
+    .status(404)
+    .json({
+        message: "Oops, Page Not Found :) ",
+        title: 'Error Page'
+      });
+  });
 
 app.listen(port, host, () => {
     console.log(`Server is running on ${host}:${port}`);
