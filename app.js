@@ -1,35 +1,32 @@
 const port = process.env.PORT || 3000;
-const host = process.env.HOST || '0.0.0.0';
-const path = require('node:path');
+const host = process.env.HOST || "0.0.0.0";
+const path = require("node:path");
 
-const express = require('express');
-const session = require('express-session');
-const passport = require('passport');
-const { PrismaSessionStore } = require('@quixo3/prisma-session-store');
-const { PrismaClient } = require('@prisma/client');
+const express = require("express");
+const session = require("express-session");
+const passport = require("passport");
+const { PrismaSessionStore } = require("@quixo3/prisma-session-store");
+const { PrismaClient } = require("@prisma/client");
 
-const routes = require('./routes');
+const routes = require("./routes");
 
 const app = express();
 
 app.use(
-    session({
-      cookie: {
-        maxAge: 1000 * 60 * 60 * 24, // Equals 1 day - 24hrs/1day - 60min/1hrs - 60seg/1min - 1000ms/1seg
-      },
-      secret: 'some secret',
-      resave: true,
-      saveUninitialized: true,
-      store: new PrismaSessionStore(
-        new PrismaClient(),
-        {
-          checkPeriod: 2 * 60 * 1000,  //ms
-          dbRecordIdIsSessionId: true,
-          dbRecordIdFunction: undefined,
-        }
-      )
-    })
-  );
+  session({
+    cookie: {
+      maxAge: 1000 * 60 * 60 * 24, // Equals 1 day - 24hrs/1day - 60min/1hrs - 60seg/1min - 1000ms/1seg
+    },
+    secret: "some secret",
+    resave: true,
+    saveUninitialized: true,
+    store: new PrismaSessionStore(new PrismaClient(), {
+      checkPeriod: 2 * 60 * 1000, //ms
+      dbRecordIdIsSessionId: true,
+      dbRecordIdFunction: undefined,
+    }),
+  })
+);
 
 // se debe inicializar cada sesion
 app.use(passport.initialize());
@@ -41,27 +38,24 @@ app.use(express.urlencoded({ extended: true }));
 
 //you will have access to the currentUser variable in all of your views
 app.use((req, res, next) => {
-    res.locals.currentUser = req.user;
-    next();
-  });
+  res.locals.currentUser = req.user;
+  next();
+});
 
-
-
-app.use('/',routes.homepage);
-app.use('/session', routes.session);
-app.use('/users', routes.user);
-app.use('/posts', routes.post);
-app.use('/comments', routes.comment);
+app.use("/", routes.homepage);
+app.use("/sign_up", routes.sign_up);
+app.use("/session", routes.session);
+app.use("/users", routes.user);
+app.use("/posts", routes.post);
+app.use("/comments", routes.comment);
 
 app.use((req, res) => {
-    res
-    .status(404)
-    .json({
-        message: "Oops, Page Not Found :) ",
-        title: 'Error Page'
-      });
+  res.status(404).json({
+    message: "Oops, Page Not Found :) ",
+    title: "Error Page",
   });
+});
 
 app.listen(port, host, () => {
-    console.log(`Server is running on ${host}:${port}`);
-  });
+  console.log(`Server is running on ${host}:${port}`);
+});
