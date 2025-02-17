@@ -1,13 +1,11 @@
-const { Router } = require('express');
+const { Router } = require("express");
 const router = Router();
-const loginController = require('../controllers/login');
+const loginController = require("../controllers/login");
+const { clearMessages } = require("./middlewares");
 
-
-router.get('/', loginController.get);
+router.get("/", loginController.get);
 
 // the following route require password.js
-router.post('/', loginController.post);
-
-
+router.post("/", clearMessages ,loginController.post);
 
 module.exports = router;
