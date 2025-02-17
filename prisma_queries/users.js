@@ -35,8 +35,34 @@ async function createUser(req, res, hashedPassword) {
             process.exit(1);
           }
     })
-  }
+  };
+
+  const getUserFromUsername = async (username) => {
+    return await prisma.user
+      .findUnique({
+        where: { username: username },
+        include: {
+          posts: true,
+          comments: true,
+        },
+      });
+  };
+  
+  const getUserFromId = async(id) => {
+    return await prisma.user
+    .findUnique({
+      where: {
+        id: Number(id),
+      },
+      include: {
+        posts: true,
+        comments: true,
+      },
+    });
+  };
 
 module.exports = {
     createUser,
+    getUserFromUsername,
+    getUserFromId,
 };

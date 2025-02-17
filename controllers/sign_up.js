@@ -1,24 +1,11 @@
-const db_posts = require("../prisma_queries/posts");
 const db_users = require("../prisma_queries/users");
 
 const passwordRequirements =
   "Password must contain at least one number, one uppercase and lowercase letter, one special character, and at least 8 or more characters";
 const bcrypt = require("bcryptjs");
 const { body, validationResult } = require("express-validator");
-const passwordValidation = require("./password_validation");
+const passwordValidation = require("./sign_up_password_validation");
 
-// GET /
-async function getHomePage(req, res) {
-  console.log(req.user);
-  const allPosts = await db_posts.getAllPosts();
-
-  res.json({
-    title: "BLOG | HOMEPAGE",
-    message: "Welcome to the API ",
-    allPosts,
-    user: req.user,
-  });
-}
 
 // GET /sign_up
 async function newUserGet(req, res) {
@@ -92,7 +79,6 @@ const newUserPost = [
 ];
 
 module.exports = {
-  getHomePage,
   newUserGet,
   newUserPost,
 };

@@ -44,6 +44,8 @@ app.use((req, res, next) => {
 
 app.use("/", routes.homepage);
 app.use("/sign_up", routes.sign_up);
+app.use("/login", routes.login);
+app.use("/logout",routes.logout);
 app.use("/session", routes.session);
 app.use("/users", routes.user);
 app.use("/posts", routes.post);
