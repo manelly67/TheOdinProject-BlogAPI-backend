@@ -6,12 +6,14 @@ const passwordRequirements =
 
 
 async function createUser(req, res, hashedPassword) {
+    
     await prisma.user
     .create({
       data: {
         email: `${req.body.email}`,
         username: `${req.body.username}`,
         password: `${hashedPassword}`,
+        role: req.body.role,
       },
     })
     .then(async () => {
