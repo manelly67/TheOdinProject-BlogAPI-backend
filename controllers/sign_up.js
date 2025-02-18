@@ -1,11 +1,9 @@
 const db_users = require("../prisma_queries/users");
-
 const passwordRequirements =
   "Password must contain at least one number, one uppercase and lowercase letter, one special character, and at least 8 or more characters";
 const bcrypt = require("bcryptjs");
 const { body, validationResult } = require("express-validator");
 const passwordValidation = require("./sign_up_password_validation");
-
 
 // GET /sign_up
 async function newUserGet(req, res) {
@@ -18,8 +16,11 @@ async function newUserGet(req, res) {
       });
       break;
     case true:
-      // CREATE LATER A ROUTE FOR ACTION REQUIRED - message you are login
-      res.redirect("/");
+      res.status(302).json({
+        title: "Logout Required",
+        user: req.user,
+        text: "You are already Login - Logout here is you want:",
+      });
       break;
   }
 }
@@ -52,7 +53,6 @@ const validateUser = [
 const newUserPost = [
   validateUser,
   async (req, res, next) => {
-    
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({
@@ -70,7 +70,7 @@ const newUserPost = [
       // otherwise, store hashedPassword in DB
       try {
         await db_users.createUser(req, res, hashedPassword);
-        // redirect inside prisma .then
+        // res.json() answer inside prisma .then
       } catch (err) {
         return next(err);
       }

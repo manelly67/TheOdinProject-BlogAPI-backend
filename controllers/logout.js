@@ -3,7 +3,11 @@ async function get(req, res, next) {
     if (err) {
       return next(err);
     }
-    res.redirect("/");
+      res.json({
+      text: 'successful logout',
+      user: undefined,
+      token: undefined,
+    });
   });
 }
 
