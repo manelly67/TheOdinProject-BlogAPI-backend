@@ -15,9 +15,12 @@ async function createUser(req, res, hashedPassword) {
       },
     })
     .then(async () => {
+        const userCreated = await getUserFromUsername(req.body.username);
         await prisma.$disconnect();
-        // CREATE LATER ACTION REQUIRED message users created login in your account
-        res.redirect("/");
+        res.json({
+          text:'user created login in your account', 
+          user:userCreated,
+        });
     })
     .catch(async (err) => {
         if (err.code === "P2002") {
