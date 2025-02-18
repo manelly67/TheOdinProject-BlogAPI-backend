@@ -9,7 +9,7 @@ const { PrismaSessionStore } = require("@quixo3/prisma-session-store");
 const { PrismaClient } = require("@prisma/client");
 
 const routes = require("./routes");
-const { isAuth } = require("./routes/middlewares");
+const { isAuth, roleAuthor } = require("./routes/middlewares");
 
 const app = express();
 
@@ -47,10 +47,10 @@ app.use("/", routes.homepage);
 app.use("/sign_up", routes.sign_up);
 app.use("/login", routes.login);
 app.use("/logout", routes.logout);
-app.use("/session", routes.session);
-app.use("/users", routes.user);
-app.use("/posts", routes.post);
-app.use("/comments", routes.comment);
+/* app.use("/session", routes.session); */
+/* app.use("/users", routes.user); */
+app.use("/posts", isAuth, roleAuthor , routes.post);
+app.use("/comments", isAuth, routes.comment);
 
 app.use((req, res) => {
   res.status(404).json({

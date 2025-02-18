@@ -2,7 +2,16 @@ module.exports.isAuth = (req, res, next) => {
   if (req.isAuthenticated()) {
     next();
   } else {
-    res.redirect("/login");
+    res.status(403).json({text:'loging in your account'});
+  }
+};
+
+module.exports.roleAuthor = (req,res,next) => {
+  const role = req.user.role;
+  if (role==="AUTHOR") {
+      next();
+  }else{
+    res.status(403).json({text:'you are not authorized to view this content'});
   }
 };
 
