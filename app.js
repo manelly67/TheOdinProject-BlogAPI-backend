@@ -4,14 +4,17 @@ const path = require("node:path");
 
 const express = require("express");
 const session = require("express-session");
+const cors = require('cors');
 const passport = require("passport");
 const { PrismaSessionStore } = require("@quixo3/prisma-session-store");
 const { PrismaClient } = require("@prisma/client");
 
 const routes = require("./routes");
 const { isAuth, roleAuthor } = require("./routes/middlewares");
-// PREGUNTAR MANANA SI AUNQUE USO JWT TAMBIEN DEBO AGREGAR CORS 
+
 const app = express();
+// Enable All CORS Requests
+app.use(cors());
 
 app.use(
   session({
@@ -47,8 +50,7 @@ app.use("/", routes.homepage);
 app.use("/sign_up", routes.sign_up);
 app.use("/login", routes.login);
 app.use("/logout", routes.logout);
-/* app.use("/session", routes.session); */
-/* app.use("/users", routes.user); */
+
 app.use("/posts", routes.post);
 app.use("/comments", routes.comment);
 
