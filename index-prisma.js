@@ -7,8 +7,8 @@ const prisma = new PrismaClient();
  // To write queries
 
 
-const users = await prisma.user.findMany();
-console.log(users);
+const posts = await prisma.post.findMany();
+console.log(posts);
  
 
     };
