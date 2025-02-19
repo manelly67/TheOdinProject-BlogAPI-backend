@@ -3,6 +3,9 @@ const LocalStrategy = require("passport-local").Strategy;
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const db_users = require("../prisma_queries/users");
+const myObject = {};
+require('dotenv').config({ processEnv: myObject });
+const secret_key = process.env.SECRET_KEY || myObject.SECRET_KEY;
 
 async function get(req, res) {
   switch (req.isAuthenticated()) {
@@ -32,7 +35,7 @@ const post = [
   // successful login will grant the user a JWT
   function (req, res) {
     const user = req.user;
-    const token = jwt.sign({ userId: user.id }, "secret", { expiresIn: '5m' });
+    const token = jwt.sign({ userId: user.id }, secret_key , { expiresIn: '1h' });
     res.json({ user: user, token: token });
   },
 ];

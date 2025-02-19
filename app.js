@@ -10,7 +10,7 @@ const { PrismaClient } = require("@prisma/client");
 
 const routes = require("./routes");
 const { isAuth, roleAuthor } = require("./routes/middlewares");
-
+// PREGUNTAR MANANA SI AUNQUE USO JWT TAMBIEN DEBO AGREGAR CORS 
 const app = express();
 
 app.use(
@@ -49,8 +49,8 @@ app.use("/login", routes.login);
 app.use("/logout", routes.logout);
 /* app.use("/session", routes.session); */
 /* app.use("/users", routes.user); */
-app.use("/posts", isAuth, roleAuthor , routes.post);
-app.use("/comments", isAuth, routes.comment);
+app.use("/posts", routes.post);
+app.use("/comments", routes.comment);
 
 app.use((req, res) => {
   res.status(404).json({
