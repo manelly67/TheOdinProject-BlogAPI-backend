@@ -8,7 +8,7 @@ router.get("/", postsController.get);
 
 router.get("/:authorid", postsController.getByAuthor);
 
-router.get("/:authorid/:postid");
+router.get("/:authorid/:postid", postsController.getPostById);
 
 router.get("/:authorid/:postid/comments");
 

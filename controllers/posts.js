@@ -34,6 +34,21 @@ async function getByAuthor(req, res) {
   }
 }
 
+async function getPostById(req, res) {
+  const { postid } = req.params;
+  console.log(postid);
+  const [ post ] = await db_posts.getPostFromId(postid);
+  if ( post===undefined || post===null){
+    res.status(400).json({
+      text: "this post does not exist"
+    });
+  }else{
+    res.status(200).json({
+      post,
+    });
+  }
+}
+
 // Following routes require authentication
 async function getNew(req, res) {
   jwt.verify(req.token, secret_key, (err, authData) => {
@@ -88,6 +103,7 @@ const postNew = [
 module.exports = {
   get,
   getByAuthor,
+  getPostById,
   getNew,
   postNew,
 };
