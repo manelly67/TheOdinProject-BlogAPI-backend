@@ -1,7 +1,7 @@
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
-// verificar cuando tenga post que hace? y agregar pagination
+//  y ver como agregar pagination
 async function getAllPosts() {
     return await prisma.post.findMany({
       where:{
@@ -11,11 +11,41 @@ async function getAllPosts() {
         id:true,
         createdAt:true,
         title:true,
-        author:true,
+        author:{
+          select:{
+            username:true,
+          }
+        },
         authorId:true,
       }
     });
   };
+
+async function getByAuthor(authorid) {
+  return await prisma.post.findMany({
+    where:{
+      AND:{
+        published:{
+          equals: true,
+        },
+        authorId:{
+          equals: Number(authorid),
+        }
+      }
+    },
+    select:{
+      id:true,
+      createdAt:true,
+      title:true,
+      author:{
+        select:{
+          username:true,
+        }
+      },
+      authorId:true,
+    }
+  });
+}
 
 async function createNewPost(req,res,id,authData) {
   await prisma.post.create({
@@ -53,4 +83,5 @@ module.exports = {
     getAllPosts,
     createNewPost,
     getPostFromId,
+    getByAuthor,
 };
