@@ -14,13 +14,13 @@ export default [
         ecmaVersion: 12,
         sourceType: "module",
       },
-      rules: {
-        "no-console": "warn",
-        "no-unused-vars": "error",
-        "semi": "error",
-        'prefer-destructuring':['error',{'array':true,'object':true},{'enforceForRenamedProperties':false}],
-      },  
-    } 
+    },
+    rules: {
+      "no-console": "warn",
+      "no-unused-vars": "error",
+      "semi": "error",
+      'prefer-destructuring':['error',{'array':true,'object':true},{'enforceForRenamedProperties':false}],
+    },  
   },
   pluginJs.configs.recommended,
 ];

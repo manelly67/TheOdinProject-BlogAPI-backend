@@ -1,7 +1,6 @@
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
-//  y ver como agregar pagination
 async function getAllPosts() {
     return await prisma.post.findMany({
       where:{
@@ -109,7 +108,7 @@ async function createNewPost(req,res,id,authData) {
       await prisma.$disconnect();
       process.exit(1);
     }
-  })
+  });
   
 };
 

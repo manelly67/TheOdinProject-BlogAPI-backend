@@ -1,16 +1,13 @@
 const port = process.env.PORT || 3000;
 const host = process.env.HOST || "0.0.0.0";
-const path = require("node:path");
 
 const express = require("express");
 const session = require("express-session");
-const cors = require('cors');
+const cors = require("cors");
 const passport = require("passport");
 const { PrismaSessionStore } = require("@quixo3/prisma-session-store");
 const { PrismaClient } = require("@prisma/client");
-
 const routes = require("./routes");
-const { isAuth, roleAuthor } = require("./routes/middlewares");
 
 const app = express();
 // Enable All CORS Requests

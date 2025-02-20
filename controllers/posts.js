@@ -20,12 +20,13 @@ async function getByAuthor(req, res) {
   const { authorid } = req.params;
   const authorExists = await db_users.authorExists(authorid);
   switch (authorExists) {
-    case true:
+    case true: {
       const postsByAuthor = await db_posts.getByAuthor(authorid);
       res.status(200).json({
         postsByAuthor,
       });
       break;
+    }
     case false:
       res.status(400).json({
         text: "this author does not exist",
@@ -36,13 +37,12 @@ async function getByAuthor(req, res) {
 
 async function getPostById(req, res) {
   const { postid } = req.params;
-  console.log(postid);
-  const [ post ] = await db_posts.getPostFromId(postid);
-  if ( post===undefined || post===null){
+  const [post] = await db_posts.getPostFromId(postid);
+  if (post === undefined || post === null) {
     res.status(400).json({
-      text: "this post does not exist"
+      text: "this post does not exist",
     });
-  }else{
+  } else {
     res.status(200).json({
       post,
     });
@@ -77,7 +77,7 @@ const validateUser = [
 
 const postNew = [
   validateUser,
-  async (req, res, next) => {
+  async (req, res) => {
     const authData = jwt.verify(req.token, secret_key, (err, authData) => {
       if (err) {
         console.log(err);
@@ -86,7 +86,6 @@ const postNew = [
         return authData;
       }
     });
-    console.log(authData);
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({
