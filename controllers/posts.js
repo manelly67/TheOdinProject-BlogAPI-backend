@@ -11,10 +11,10 @@ const db_users = require("../prisma_queries/users");
 
 async function get(req, res) {
   const allPosts = await db_posts.getAllPosts();
-  res.status(200).json({
+  return res.status(200).json({
     allPosts,
   });
-}
+};
 
 async function getByAuthor(req, res) {
   const { authorid } = req.params;
@@ -39,17 +39,33 @@ async function getPostById(req, res) {
   const { postid } = req.params;
   const [post] = await db_posts.getPostFromId(postid);
   if (post === undefined || post === null) {
-    res.status(400).json({
+    return res.status(400).json({
       text: "this post does not exist",
     });
   } else {
-    res.status(200).json({
+    return res.status(200).json({
       post,
     });
   }
 }
 
 // Following routes require authentication
+async function getMyWork(req,res) {
+  jwt.verify(req.token, secret_key, (err, authData) => {
+    if (err) {
+      console.log(err);
+      res.sendStatus(403);
+    } else {
+      return res.status(200).json({
+        title: "BLOG | MY WORKSPACE",
+        user: req.user,
+        authData,
+      });
+    }
+  });
+}
+
+
 async function getNew(req, res) {
   jwt.verify(req.token, secret_key, (err, authData) => {
     if (err) {
@@ -103,6 +119,7 @@ module.exports = {
   get,
   getByAuthor,
   getPostById,
+  getMyWork,
   getNew,
   postNew,
 };
