@@ -20,7 +20,7 @@ async function getAllPosts() {
       }
     });
   };
-
+  
 async function getByAuthor(authorid) {
   return await prisma.post.findMany({
     where:{
@@ -46,6 +46,44 @@ async function getByAuthor(authorid) {
     }
   });
 }
+
+async function getPostFromId(id) {
+  return await prisma.post.findMany({
+    where:{
+      AND:{
+        published:{
+          equals: true,
+        },
+        id:{
+          equals: id,
+        },
+      }
+    },
+    select:{
+      id:true,
+      createdAt:true,
+      updatedAt:true,
+      title:true,
+      content:true,
+      author:{
+        select:{
+          username:true,
+        }
+      },
+      authorId:true,
+      comments:{
+        select:{
+          text: true,
+          user:{
+            select:{
+              username:true,
+            }
+          }
+        }
+      },
+    }
+  });
+};
 
 async function createNewPost(req,res,id,authData) {
   await prisma.post.create({
@@ -75,9 +113,7 @@ async function createNewPost(req,res,id,authData) {
   
 };
 
-async function getPostFromId(id) {
-  
-}
+
 
 module.exports = {
     getAllPosts,
