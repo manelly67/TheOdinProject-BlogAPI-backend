@@ -96,9 +96,38 @@ async function createNewPost(req,res,id,authData) {
   })
   .then(async () => {
     await prisma.$disconnect();
-    res.json({
+    return res.status(200).json({
       text:'new post created', 
       postid: id,
+    });
+  })
+  .catch(async (err) => {
+    if(err){
+      console.log(err);
+    }else{
+      await prisma.$disconnect();
+      process.exit(1);
+    }
+  });
+  
+};
+
+async function updatePost(req,res,postid) {
+  await prisma.post.update({
+    where:{
+      id: postid,
+    },
+    data: {
+      title: req.body.title,
+      content: req.body.content,
+      published: req.body.published,
+    },
+  })
+  .then(async () => {
+    await prisma.$disconnect();
+    return res.status(200).json({
+      text:'post successfully updated', 
+      postid,
     });
   })
   .catch(async (err) => {
@@ -116,7 +145,8 @@ async function createNewPost(req,res,id,authData) {
 
 module.exports = {
     getAllPosts,
-    createNewPost,
-    getPostFromId,
     getByAuthor,
+    getPostFromId,
+    createNewPost,
+    updatePost,
 };
