@@ -1,9 +1,9 @@
 async function get(req, res, next) {
   req.logout((err) => {
     if (err) {
-      return next(err);
+      next(err);
     }
-      res.json({
+      return res.status(200).json({
       text: 'successful logout',
       user: undefined,
       token: undefined,
