@@ -103,7 +103,10 @@ async function createNewPost(req,res,id,authData) {
   })
   .catch(async (err) => {
     if(err){
-      console.log(err);
+      return res.status(400).json({
+        err_code: err.code,
+        err_meta: err.meta,
+      });
     }else{
       await prisma.$disconnect();
       process.exit(1);
@@ -132,15 +135,42 @@ async function updatePost(req,res,postid) {
   })
   .catch(async (err) => {
     if(err){
-      console.log(err);
+      return res.status(400).json({
+        err_code: err.code,
+        err_meta: err.meta,
+      });
     }else{
       await prisma.$disconnect();
       process.exit(1);
     }
   });
-  
 };
 
+async function deletePost(req,res,postid) {
+  await prisma.post.delete({
+    where:{
+      id: postid,
+    }
+  })
+  .then(async () => {
+    await prisma.$disconnect();
+    return res.status(200).json({
+      text:'post deleted', 
+      postid,
+    });
+  })
+  .catch(async (err) => {
+    if(err){
+      return res.status(400).json({
+        err_code: err.code,
+        err_meta: err.meta,
+      });
+    }else{
+      await prisma.$disconnect();
+      process.exit(1);
+    }
+  });
+};
 
 
 module.exports = {
@@ -149,4 +179,5 @@ module.exports = {
     getPostFromId,
     createNewPost,
     updatePost,
+    deletePost,
 };
