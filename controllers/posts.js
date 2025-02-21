@@ -54,8 +54,9 @@ async function getPostById(req, res) {
 async function getNew(req, res) {
   jwt.verify(req.token, secret_key, (err, authData) => {
     if (err) {
-      console.log(err);
-      res.sendStatus(403);
+      res.status(403).json({
+        err: err,
+      });
     } else {
       return res.status(200).json({
         title: "BLOG | CREATE NEW BLOG",
@@ -81,8 +82,9 @@ const postNew = [
   async (req, res) => {
     const authData = jwt.verify(req.token, secret_key, (err, authData) => {
       if (err) {
-        console.log(err);
-        return res.sendStatus(403);
+        return res.status(403).json({
+          err: err,
+        });
       } else {
         return authData;
       }
@@ -109,8 +111,9 @@ const updatePost = [
     const { authorid, postid } = req.params;
     const authData = jwt.verify(req.token, secret_key, (err, authData) => {
       if (err) {
-        console.log(err);
-        return res.sendStatus(403);
+        return res.status(403).json({
+          err: err,
+        });
       } else {
         return authData;
       }
@@ -139,6 +142,31 @@ const updatePost = [
   },
 ];
 
+async function deletePost(req, res) {
+  const { authorid, postid } = req.params;
+  const authData = jwt.verify(req.token, secret_key, (err, authData) => {
+    if (err) {
+      return res.status(403).json({
+        err: err,
+      });
+    } else {
+      return authData;
+    }
+  });
+  if (authData.statusCode !== 403) {
+    switch (Number(authData.userId) === Number(authorid)) {
+      case true:
+        await db_posts.deletePost(req, res, postid);
+        break;
+      case false:
+        res.status(400).json({
+          text: "Post can only be deleted by the author",
+        });
+        break;
+    }
+  }
+}
+
 module.exports = {
   get,
   getByAuthor,
@@ -146,4 +174,5 @@ module.exports = {
   getNew,
   postNew,
   updatePost,
+  deletePost,
 };

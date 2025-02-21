@@ -23,6 +23,12 @@ router.put(
   postsController.updatePost
 );
 
-router.delete("/:authorid/:postid", isAuth, roleAuthor, verifyToken);
+router.delete(
+  "/:authorid/:postid",
+  isAuth,
+  roleAuthor,
+  verifyToken,
+  postsController.deletePost
+);
 
 module.exports = router;
