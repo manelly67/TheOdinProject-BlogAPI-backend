@@ -75,9 +75,23 @@ async function authorExists(id) {
   }
 }
 
+async function userExists(userid) {
+  const user = await prisma.user.findUnique({
+    where: {
+      id: Number(userid),
+    },
+  });
+  if (user !== null) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
 module.exports = {
   createUser,
   getUserFromUsername,
   getUserFromId,
   authorExists,
+  userExists,
 };
