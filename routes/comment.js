@@ -1,8 +1,9 @@
 const { Router } = require("express");
 const router = Router();
 const { isAuth, verifyToken } = require("./middlewares");
+const commentController = require("../controllers/comments");
 
-router.get("/:userid");
+router.get("/:userid",commentController.getByUser);
 
 router.get("/:userid/:postid");
 
