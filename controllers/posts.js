@@ -50,21 +50,6 @@ async function getPostById(req, res) {
 }
 
 // Following routes require authentication
-async function getMyWork(req,res) {
-  jwt.verify(req.token, secret_key, (err, authData) => {
-    if (err) {
-      console.log(err);
-      res.sendStatus(403);
-    } else {
-      return res.status(200).json({
-        title: "BLOG | MY WORKSPACE",
-        user: req.user,
-        authData,
-      });
-    }
-  });
-}
-
 
 async function getNew(req, res) {
   jwt.verify(req.token, secret_key, (err, authData) => {
@@ -119,7 +104,6 @@ module.exports = {
   get,
   getByAuthor,
   getPostById,
-  getMyWork,
   getNew,
   postNew,
 };

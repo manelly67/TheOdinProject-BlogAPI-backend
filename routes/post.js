@@ -6,8 +6,6 @@ const router = Router();
 
 router.get("/", postsController.get);
 
-router.get("/mywork", isAuth,roleAuthor, verifyToken,postsController.getMyWork);
-
 router.get("/new", isAuth, roleAuthor, verifyToken, postsController.getNew);
 router.post("/new", isAuth, roleAuthor, verifyToken, postsController.postNew);
 
