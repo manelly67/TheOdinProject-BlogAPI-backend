@@ -14,7 +14,7 @@ async function get(req, res) {
   return res.status(200).json({
     allPosts,
   });
-};
+}
 
 async function getByAuthor(req, res) {
   const { authorid } = req.params;
@@ -82,21 +82,60 @@ const postNew = [
     const authData = jwt.verify(req.token, secret_key, (err, authData) => {
       if (err) {
         console.log(err);
-        res.sendStatus(403);
+        return res.sendStatus(403);
       } else {
         return authData;
       }
     });
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({
-        title: "BLOG | CREATE NEW BLOG",
-        user: req.user,
-        errors: errors.array(),
-      });
+    if (authData.statusCode !== 403) {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).json({
+          title: "BLOG | CREATE NEW BLOG",
+          user: req.user,
+          errors: errors.array(),
+        });
+      }
+      const id = uuidv4();
+      await db_posts.createNewPost(req, res, id, authData);
     }
-    const id = uuidv4();
-    await db_posts.createNewPost(req, res, id, authData);
+  },
+];
+
+// same validate variables of new blog
+const updatePost = [
+  validateUser,
+  async (req, res) => {
+    const { authorid, postid } = req.params;
+    const authData = jwt.verify(req.token, secret_key, (err, authData) => {
+      if (err) {
+        console.log(err);
+        return res.sendStatus(403);
+      } else {
+        return authData;
+      }
+    });
+    if (authData.statusCode !== 403) {
+      switch (Number(authData.userId) === Number(authorid)) {
+        case true: {
+          const errors = validationResult(req);
+          if (!errors.isEmpty()) {
+            return res.status(400).json({
+              title: "BLOG | UPDATE",
+              user: req.user,
+              errors: errors.array(),
+            });
+          }
+          await db_posts.updatePost(req, res, postid);
+          break;
+        }
+        case false:
+          res.status(400).json({
+            text: "Post can only be modified by the author",
+          });
+          break;
+      }
+    }
   },
 ];
 
@@ -106,4 +145,5 @@ module.exports = {
   getPostById,
   getNew,
   postNew,
+  updatePost,
 };

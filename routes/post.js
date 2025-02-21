@@ -15,8 +15,14 @@ router.get("/:authorid/:postid", postsController.getPostById);
 
 router.get("/:authorid/:postid/comments");
 
-router.put("/:postid", isAuth, roleAuthor, verifyToken);
+router.put(
+  "/:authorid/:postid",
+  isAuth,
+  roleAuthor,
+  verifyToken,
+  postsController.updatePost
+);
 
-router.delete("/:postid", isAuth, roleAuthor, verifyToken);
+router.delete("/:authorid/:postid", isAuth, roleAuthor, verifyToken);
 
 module.exports = router;
