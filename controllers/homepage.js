@@ -15,10 +15,10 @@ async function get(req, res) {
     message: "Welcome to the API ",
     allPosts,
   });
-};
+}
 
 // Following routes require authentication
-async function getMyWork(req,res) {
+async function getMyWork(req, res) {
   jwt.verify(req.token, secret_key, (err, authData) => {
     if (err) {
       console.log(err);
@@ -31,8 +31,7 @@ async function getMyWork(req,res) {
       });
     }
   });
-};
-
+}
 
 module.exports = {
   get,
