@@ -10,7 +10,7 @@ const db_posts = require("../prisma_queries/posts");
 async function get(req, res) {
   const allPosts = await db_posts.getAllPosts();
 
-  res.status(200).json({
+  return res.status(200).json({
     title: "BLOG | HOMEPAGE",
     message: "Welcome to the API ",
     allPosts,
@@ -21,8 +21,9 @@ async function get(req, res) {
 async function getMyWork(req, res) {
   jwt.verify(req.token, secret_key, (err, authData) => {
     if (err) {
-      console.log(err);
-      res.sendStatus(403);
+      return res.status(403).json({
+        err: err,
+      });
     } else {
       return res.status(200).json({
         title: "BLOG | MY WORKSPACE",
