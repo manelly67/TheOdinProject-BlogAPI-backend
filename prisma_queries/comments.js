@@ -25,6 +25,39 @@ async function getByUser(userid) {
   });
 }
 
+async function getByUserAndPost(userid, postid) {
+  return await prisma.comment.findMany({
+      where:{
+        AND:{
+          userId:{
+            equals: Number(userid),
+          },
+          postAboutId:{
+            equals: postid,
+          },
+        }
+      },
+      select: {
+        id: true,
+        createdAt: true,
+        text: true,
+        user: {
+          select: {
+            username: true,
+          },
+        },
+        userId: true,
+        postAbout: {
+          select: {
+            title: true,
+          },
+        },
+      },
+    });
+
+}
+
 module.exports = {
   getByUser,
+  getByUserAndPost,
 };
