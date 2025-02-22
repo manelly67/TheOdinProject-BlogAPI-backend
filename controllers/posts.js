@@ -18,28 +18,20 @@ async function get(req, res) {
 
 async function getByAuthor(req, res) {
   let { authorid } = req.params;
-  authorid = Number(authorid);
-  if (Number.isNaN(authorid)) {
-    // check is a value is equal NaN
-    res.status(400).json({
-      text: "the author id must be a number",
-    });
-  } else {
-    const authorExists = await db_users.authorExists(authorid);
-    switch (authorExists) {
-      case true: {
-        const postsByAuthor = await db_posts.getByAuthor(authorid);
-        res.status(200).json({
-          postsByAuthor,
-        });
-        break;
-      }
-      case false:
-        res.status(400).json({
-          text: "this author does not exist",
-        });
-        break;
+  const authorExists = await db_users.authorExists(authorid);
+  switch (authorExists) {
+    case true: {
+      const postsByAuthor = await db_posts.getByAuthor(authorid);
+      res.status(200).json({
+        postsByAuthor,
+      });
+      break;
     }
+    case false:
+      res.status(400).json({
+        text: "this author does not exist",
+      });
+      break;
   }
 }
 
