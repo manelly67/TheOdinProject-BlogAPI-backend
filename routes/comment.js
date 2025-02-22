@@ -3,7 +3,7 @@ const router = Router();
 const { isAuth, verifyToken, useridIsNumber } = require("./middlewares");
 const commentController = require("../controllers/comments");
 
-router.get("/:postid");
+router.get("/:postid", commentController.getByPost);
 
 router.get("/:userid", useridIsNumber, commentController.getByUser);
 

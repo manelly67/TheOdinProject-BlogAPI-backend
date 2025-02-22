@@ -54,7 +54,29 @@ async function getByUserAndPost(req, res) {
   }
 }
 
+async function getByPost(req,res) {
+  const { postid } = req.params;
+  const postExists = await db_posts.postExists(postid);
+  switch(postExists){
+    case false:
+      res.status(400).json({
+        text: "this post does not exist",
+      });
+    break;
+    case true:
+      {
+        const comments = await db_comments.getByPost(postid);
+        res.status(200).json({
+          commentsByPost: comments,
+          postid: postid,
+        });
+      }
+    break;
+  }
+}
+
 module.exports = {
   getByUser,
   getByUserAndPost,
+  getByPost,
 };
