@@ -172,6 +172,18 @@ async function deletePost(req,res,postid) {
   });
 };
 
+async function postExists(postid) {
+  const post = await prisma.post.findUnique({
+    where: {
+      id: postid,
+    },
+  });
+  if (post !== null) {
+    return true;
+  } else {
+    return false;
+  }
+};
 
 module.exports = {
     getAllPosts,
@@ -180,4 +192,5 @@ module.exports = {
     createNewPost,
     updatePost,
     deletePost,
+    postExists,
 };
